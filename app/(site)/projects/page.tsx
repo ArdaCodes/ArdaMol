@@ -57,7 +57,7 @@ export default async function ProjectsPage() {
                   ))}
                 </div>
                 {p.externalUrl && (
-                  
+				<a
                     href={p.externalUrl}
                     target="_blank"
                     rel="noreferrer"
