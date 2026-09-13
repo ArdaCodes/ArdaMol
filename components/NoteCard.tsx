@@ -29,7 +29,7 @@ export default function NoteCard({
   const dotColor = post.category ? colorForCategory(post.category.name) : "#c9a24a";
 
   return (
-    <Link
+  <Link
       href={`/notes/${post.slug}`}
       data-cursor-hover
       className="group block transition-transform duration-300 hover:-translate-y-1"
