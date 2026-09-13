@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
+import { revalidatePath } from "next/cache";
+
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   const settings = await prisma.setting.findMany();
@@ -22,5 +25,6 @@ export async function PUT(req: NextRequest) {
       create: { key, value: String(value) },
     });
   }
+  revalidatePath("/");
   return NextResponse.json({ ok: true });
 }
