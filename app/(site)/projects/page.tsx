@@ -1,4 +1,4 @@
-import Image from "next/image";
+﻿import Image from "next/image";
 import { getProjects } from "@/lib/data";
 import { prisma } from "@/lib/prisma";
 import Reveal from "@/components/Reveal";
@@ -25,17 +25,14 @@ export default async function ProjectsPage() {
           {s.projectsPageHeadline || "Things I've built."}
         </h1>
         <p className="mt-5 max-w-lg text-[var(--ink-muted)]">
-          {s.projectsPageDesc ||
-            "A working record of experiments across AI, robotics, the web, and the occasional creative side-quest."}
+          {s.projectsPageDesc || "A working record of experiments across AI, robotics, the web, and the occasional creative side-quest."}
         </p>
       </Reveal>
 
       {projects.length === 0 && (
         <div className="mt-24 flex flex-col items-center text-center">
           <p className="font-display text-3xl text-[var(--ink)]">No projects on display yet.</p>
-          <p className="mt-3 max-w-sm text-[var(--ink-muted)]">
-            The workshop is quiet for now — new work will appear here soon.
-          </p>
+          <p className="mt-3 max-w-sm text-[var(--ink-muted)]">The workshop is quiet for now - new work will appear here soon.</p>
         </div>
       )}
 
@@ -72,7 +69,7 @@ export default async function ProjectsPage() {
                     rel="noreferrer"
                     className="ink-link mt-5 inline-block text-sm text-[var(--ink)]"
                   >
-                    {s.projectsVisitButtonText || "Visit project →"}
+                    {s.projectsVisitButtonText || "Visit project"}
                   </a>
                 )}
               </div>
