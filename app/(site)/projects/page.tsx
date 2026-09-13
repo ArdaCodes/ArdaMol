@@ -1,10 +1,12 @@
-﻿```tsx
-import Image from "next/image";
+﻿import Image from "next/image";
 import { getProjects } from "@/lib/data";
 import { prisma } from "@/lib/prisma";
 import Reveal from "@/components/Reveal";
 
-export const metadata = { title: "Projects" };
+export const metadata = {
+  title: "Projects",
+};
+
 export const revalidate = 0;
 
 export default async function ProjectsPage() {
@@ -14,10 +16,13 @@ export default async function ProjectsPage() {
   ]);
 
   const s: Record<string, string> = {};
-  for (const item of allSettings as any[]) s[item.key] = item.value;
+
+  for (const item of allSettings) {
+    s[item.key] = item.value;
+  }
 
   return (
-    <div className="mx-auto max-w-6xl px-6 pb-28 pt-36 md:px-10 md:pt-44">
+    <main className="mx-auto max-w-6xl px-6 pb-28 pt-36 md:px-10 md:pt-44">
       <Reveal>
         <p className="text-[11px] uppercase tracking-[0.14em] text-accent">
           {s.projectsPageLabel || "Projects"}
@@ -48,7 +53,7 @@ export default async function ProjectsPage() {
       <div className="mt-16 grid grid-cols-1 gap-10 md:grid-cols-2">
         {projects.map((p: any, i: number) => (
           <Reveal key={p.slug} delay={i * 0.05}>
-            <div className="group overflow-hidden rounded-sm border border-[var(--border)]">
+            <article className="group overflow-hidden rounded-sm border border-[var(--border)]">
               <div className="relative aspect-[16/10]">
                 {p.image && (
                   <Image
@@ -75,14 +80,15 @@ export default async function ProjectsPage() {
                 </p>
 
                 <div className="mt-4 flex flex-wrap gap-2">
-                  {p.technologies.split(",").map((t: string) => (
-                    <span
-                      key={t}
-                      className="rounded-full border border-[var(--border-strong)] px-2.5 py-1 text-[11px] text-[var(--ink-muted)]"
-                    >
-                      {t.trim()}
-                    </span>
-                  ))}
+                  {p.technologies &&
+                    p.technologies.split(",").map((t: string) => (
+                      <span
+                        key={t}
+                        className="rounded-full border border-[var(--border-strong)] px-2.5 py-1 text-[11px] text-[var(--ink-muted)]"
+                      >
+                        {t.trim()}
+                      </span>
+                    ))}
                 </div>
 
                 {p.externalUrl && (
@@ -96,11 +102,10 @@ export default async function ProjectsPage() {
                   </a>
                 )}
               </div>
-            </div>
+            </article>
           </Reveal>
         ))}
       </div>
-    </div>
+    </main>
   );
 }
-```
