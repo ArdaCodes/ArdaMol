@@ -1,4 +1,5 @@
-﻿import Image from "next/image";
+﻿```tsx
+import Image from "next/image";
 import { getProjects } from "@/lib/data";
 import { prisma } from "@/lib/prisma";
 import Reveal from "@/components/Reveal";
@@ -21,18 +22,26 @@ export default async function ProjectsPage() {
         <p className="text-[11px] uppercase tracking-[0.14em] text-accent">
           {s.projectsPageLabel || "Projects"}
         </p>
+
         <h1 className="mt-3 font-display text-5xl text-[var(--ink)] md:text-6xl">
           {s.projectsPageHeadline || "Things I've built."}
         </h1>
+
         <p className="mt-5 max-w-lg text-[var(--ink-muted)]">
-          {s.projectsPageDesc || "A working record of experiments across AI, robotics, the web, and the occasional creative side-quest."}
+          {s.projectsPageDesc ||
+            "A working record of experiments across AI, robotics, the web, and the occasional creative side-quest."}
         </p>
       </Reveal>
 
       {projects.length === 0 && (
         <div className="mt-24 flex flex-col items-center text-center">
-          <p className="font-display text-3xl text-[var(--ink)]">No projects on display yet.</p>
-          <p className="mt-3 max-w-sm text-[var(--ink-muted)]">The workshop is quiet for now - new work will appear here soon.</p>
+          <p className="font-display text-3xl text-[var(--ink)]">
+            No projects on display yet.
+          </p>
+
+          <p className="mt-3 max-w-sm text-[var(--ink-muted)]">
+            The workshop is quiet for now - new work will appear here soon.
+          </p>
         </div>
       )}
 
@@ -51,19 +60,33 @@ export default async function ProjectsPage() {
                   />
                 )}
               </div>
+
               <div className="p-6">
-                <p className="text-[11px] uppercase tracking-[0.12em] text-accent">{p.category}</p>
-                <h3 className="mt-2 font-display text-2xl text-[var(--ink)]">{p.title}</h3>
-                <p className="mt-2 text-sm text-[var(--ink-muted)]">{p.description}</p>
+                <p className="text-[11px] uppercase tracking-[0.12em] text-accent">
+                  {p.category}
+                </p>
+
+                <h3 className="mt-2 font-display text-2xl text-[var(--ink)]">
+                  {p.title}
+                </h3>
+
+                <p className="mt-2 text-sm text-[var(--ink-muted)]">
+                  {p.description}
+                </p>
+
                 <div className="mt-4 flex flex-wrap gap-2">
                   {p.technologies.split(",").map((t: string) => (
-                    <span key={t} className="rounded-full border border-[var(--border-strong)] px-2.5 py-1 text-[11px] text-[var(--ink-muted)]">
+                    <span
+                      key={t}
+                      className="rounded-full border border-[var(--border-strong)] px-2.5 py-1 text-[11px] text-[var(--ink-muted)]"
+                    >
                       {t.trim()}
                     </span>
                   ))}
                 </div>
+
                 {p.externalUrl && (
-                  
+                  <a
                     href={p.externalUrl}
                     target="_blank"
                     rel="noreferrer"
@@ -80,3 +103,4 @@ export default async function ProjectsPage() {
     </div>
   );
 }
+```
