@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const ALLOWED = ["image/jpeg", "image/png", "image/webp"];
 
@@ -20,16 +25,19 @@ export async function POST(req: NextRequest) {
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
 
-  const uploadsDir = path.join(process.cwd(), "public", "uploads");
-  await mkdir(uploadsDir, { recursive: true });
+  const uploadResult = await new Promise<any>((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder: "arda-mol" },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result);
+      }
+    );
+    stream.end(buffer);
+  });
 
-  const ext = file.name.split(".").pop() || "jpg";
-  const filename = `${Date.now()}-${Math.round(Math.random() * 1e6)}.${ext}`;
-  await writeFile(path.join(uploadsDir, filename), buffer);
-
-  const url = `/uploads/${filename}`;
   const media = await prisma.media.create({
-    data: { filename: file.name, url, mimeType: file.type },
+    data: { filename: file.name, url: uploadResult.secure_url, mimeType: file.type },
   });
 
   return NextResponse.json({ media });
