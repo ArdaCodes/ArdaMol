@@ -4,14 +4,28 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 
-export default function ParallaxHero({ tagline }: { tagline: string }) {
+interface ParallaxHeroProps {
+  tagline: string;
+  eyebrow?: string;
+  titleMain?: string;
+  titleAccent?: string;
+  exploreNotesText?: string;
+  viewProjectsText?: string;
+  scrollText?: string;
+}
+
+export default function ParallaxHero({
+  tagline,
+  eyebrow = "THE CASTLE OF IDEAS",
+  titleMain = "ARDA",
+  titleAccent = "MOL",
+  exploreNotesText = "Explore Notes",
+  viewProjectsText = "View Projects",
+  scrollText = "SCROLL",
+}: ParallaxHeroProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: wrapRef, offset: ["start start", "end end"] });
 
-  // Layer speeds — the further "away" a layer reads, the less it
-  // moves, which is what sells the depth. Values ported 1:1 from the
-  // reference GSAP timeline (originally tuned against a 900px-tall
-  // 1600×900 viewBox).
   const starsOpacity = useTransform(scrollYProgress, [0, 1], [0, 0.9]);
   const mtnFarY = useTransform(scrollYProgress, [0, 1], [0, -60]);
   const mtnMidY = useTransform(scrollYProgress, [0, 1], [0, -140]);
@@ -43,10 +57,8 @@ export default function ParallaxHero({ tagline }: { tagline: string }) {
             </radialGradient>
           </defs>
 
-          {/* sky */}
           <rect width="1600" height="900" fill="url(#skyGrad)" />
 
-          {/* stars, fade in as we scroll deeper */}
           <motion.g fill="#efe7d8" style={{ opacity: starsOpacity }}>
             <circle cx="120" cy="90" r="1.4" /><circle cx="260" cy="150" r="1" /><circle cx="410" cy="70" r="1.6" />
             <circle cx="560" cy="130" r="1" /><circle cx="700" cy="60" r="1.3" /><circle cx="860" cy="110" r="1" />
@@ -56,31 +68,26 @@ export default function ParallaxHero({ tagline }: { tagline: string }) {
             <circle cx="1220" cy="210" r="1" /><circle cx="1480" cy="190" r="1.3" />
           </motion.g>
 
-          {/* far mountains */}
           <motion.polygon
             style={{ y: mtnFarY }}
             points="0,900 0,560 150,440 340,540 560,380 820,520 1060,400 1320,540 1600,430 1600,900"
             fill="#241d2c"
           />
 
-          {/* mid mountains */}
           <motion.polygon
             style={{ y: mtnMidY }}
             points="0,900 0,640 220,520 460,620 720,460 980,610 1240,480 1600,600 1600,900"
             fill="#181420"
           />
 
-          {/* fog band */}
           <motion.rect x="0" y="600" width="1600" height="140" fill="#efe7d8" style={{ y: fogY, opacity: fogOpacity }} />
 
-          {/* near mountains */}
           <motion.polygon
             style={{ y: mtnNearY }}
             points="0,900 0,720 260,620 540,700 880,560 1180,680 1600,600 1600,900"
             fill="#100d16"
           />
 
-          {/* castle silhouette */}
           <motion.g fill="#0a080b" style={{ y: castleY, scale: castleScale, transformOrigin: "50% 100%" }}>
             <rect x="700" y="500" width="200" height="220" />
             <rect x="660" y="460" width="40" height="260" />
@@ -94,15 +101,12 @@ export default function ParallaxHero({ tagline }: { tagline: string }) {
             <rect x="470" y="520" width="30" height="200" />
             <rect x="1100" y="520" width="30" height="200" />
             <rect x="0" y="680" width="1600" height="220" />
-            {/* gate */}
             <path d="M 780 720 L 780 630 A 20 20 0 0 1 820 630 L 820 720 Z" fill="#050405" />
           </motion.g>
 
-          {/* torch glow either side of the gate */}
           <motion.circle cx="740" cy="670" r="10" fill="#e8a94b" style={{ opacity: torchL }} />
           <motion.circle cx="860" cy="670" r="10" fill="#e8a94b" style={{ opacity: torchR }} />
 
-          {/* foreground courtyard ground, rises last */}
           <motion.rect x="0" y="820" width="1600" height="200" fill="#050405" style={{ y: groundY }} />
         </svg>
 
@@ -110,9 +114,9 @@ export default function ParallaxHero({ tagline }: { tagline: string }) {
           style={{ opacity: heroOpacity, y: heroY }}
           className="pointer-events-none absolute inset-0 z-[5] flex flex-col items-center justify-end pb-[9vh] text-center"
         >
-          <p className="mb-[22px] text-xs tracking-[0.32em] text-[#8a712f]">THE CASTLE OF IDEAS</p>
+          <p className="mb-[22px] text-xs tracking-[0.32em] text-[#8a712f]">{eyebrow}</p>
           <h1 className="font-display text-[clamp(3.4rem,9vw,8rem)] font-normal leading-[0.95] tracking-tight text-[#efe7d8]">
-            ARDA <span className="italic font-light text-[#c9a24a]">MOL</span>
+            {titleMain} <span className="italic font-light text-[#c9a24a]">{titleAccent}</span>
           </h1>
           <p className="mt-6 max-w-[420px] text-sm tracking-[0.06em] text-[#a9a196]">{tagline}</p>
           <div className="pointer-events-auto mt-9 flex items-center gap-6">
@@ -121,10 +125,10 @@ export default function ParallaxHero({ tagline }: { tagline: string }) {
               data-cursor-hover
               className="rounded-full bg-[#c9a24a] px-6 py-3 text-sm font-medium text-[#0b0b0d] transition-transform hover:scale-[1.03]"
             >
-              Explore Notes
+              {exploreNotesText}
             </Link>
             <Link href="/projects" data-cursor-hover className="ink-link text-sm text-[#efe7d8]">
-              View Projects
+              {viewProjectsText}
             </Link>
           </div>
         </motion.div>
@@ -134,7 +138,7 @@ export default function ParallaxHero({ tagline }: { tagline: string }) {
             className="h-[38px] w-px animate-pulse"
             style={{ background: "linear-gradient(180deg, #c9a24a, transparent)" }}
           />
-          <span className="text-[10px] tracking-[0.28em] text-[#a9a196]">SCROLL</span>
+          <span className="text-[10px] tracking-[0.28em] text-[#a9a196]">{scrollText}</span>
         </div>
       </div>
     </div>

@@ -1,23 +1,32 @@
 import Image from "next/image";
 import { getProjects } from "@/lib/data";
+import { prisma } from "@/lib/prisma";
 import Reveal from "@/components/Reveal";
 
 export const metadata = { title: "Projects" };
 export const revalidate = 0;
 
 export default async function ProjectsPage() {
-  const projects = await getProjects();
+  const [projects, allSettings] = await Promise.all([
+    getProjects(),
+    prisma.setting.findMany(),
+  ]);
+
+  const s: Record<string, string> = {};
+  for (const item of allSettings as any[]) s[item.key] = item.value;
 
   return (
     <div className="mx-auto max-w-6xl px-6 pb-28 pt-36 md:px-10 md:pt-44">
       <Reveal>
-        <p className="text-[11px] uppercase tracking-[0.14em] text-accent">Projects</p>
+        <p className="text-[11px] uppercase tracking-[0.14em] text-accent">
+          {s.projectsPageLabel || "Projects"}
+        </p>
         <h1 className="mt-3 font-display text-5xl text-[var(--ink)] md:text-6xl">
-          Things I've built.
+          {s.projectsPageHeadline || "Things I've built."}
         </h1>
         <p className="mt-5 max-w-lg text-[var(--ink-muted)]">
-          A working record of experiments across AI, robotics, the web, and
-          the occasional creative side-quest.
+          {s.projectsPageDesc ||
+            "A working record of experiments across AI, robotics, the web, and the occasional creative side-quest."}
         </p>
       </Reveal>
 
@@ -48,13 +57,13 @@ export default async function ProjectsPage() {
                   ))}
                 </div>
                 {p.externalUrl && (
-                  <a
+                  
                     href={p.externalUrl}
                     target="_blank"
                     rel="noreferrer"
                     className="ink-link mt-5 inline-block text-sm text-[var(--ink)]"
                   >
-                    Visit project →
+                    {s.projectsVisitButtonText || "Visit project →"}
                   </a>
                 )}
               </div>

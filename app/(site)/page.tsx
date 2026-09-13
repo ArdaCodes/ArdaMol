@@ -10,39 +10,48 @@ import { formatDate } from "@/lib/utils";
 export const revalidate = 0;
 
 export default async function HomePage() {
-  const [tagline, aboutSetting, featured, latest, projects] = await Promise.all([
-    prisma.setting.findUnique({ where: { key: "siteTagline" } }),
-    prisma.setting.findUnique({ where: { key: "aboutText" } }),
+  const [featured, latest, projects, allSettings] = await Promise.all([
     getFeaturedPost(),
     getLatestPosts(6, undefined),
     getProjects(),
+    prisma.setting.findMany(),
   ]);
+
+  const s: Record<string, string> = {};
+  for (const item of allSettings as any[]) s[item.key] = item.value;
 
   const latestExcludingFeatured = latest.filter((p: any) => p.slug !== featured?.slug).slice(0, 6);
 
   const timeline = [
-    { year: "2023", label: "Started building small side projects seriously" },
-    { year: "2024", label: "Went deep on AI systems and robotics experiments" },
-    { year: "2025", label: "Began documenting the process publicly" },
-    { year: "2026", label: "Arda Mol — The Castle of Ideas — goes live" },
+    { year: "2023", label: s.timeline2023 || "Started building small side projects seriously" },
+    { year: "2024", label: s.timeline2024 || "Went deep on AI systems and robotics experiments" },
+    { year: "2025", label: s.timeline2025 || "Began documenting the process publicly" },
+    { year: "2026", label: s.timeline2026 || "Arda Mol — The Castle of Ideas — goes live" },
   ];
 
   return (
     <>
-      <ParallaxHero tagline={tagline?.value || "Thoughts. Stories. Projects. Experiments."} />
+      <ParallaxHero
+        tagline={s.siteTagline || "Thoughts. Stories. Projects. Experiments."}
+        eyebrow={s.heroEyebrow}
+        titleMain={s.heroTitleMain}
+        titleAccent={s.heroTitleAccent}
+        exploreNotesText={s.heroExploreNotesText}
+        viewProjectsText={s.heroViewProjectsText}
+        scrollText={s.heroScrollText}
+      />
 
       {/* ABOUT */}
       <section id="about" className="mx-auto max-w-6xl px-6 py-24 md:px-10 md:py-32">
         <Reveal>
           <p className="font-display text-2xl leading-snug text-[var(--ink)] md:text-3xl md:leading-snug">
-            Things I learn, build and document. This is a running record of
-            experiments that worked, ideas that didn't, and the occasional
-            project I'm proud enough to show.
+            {s.aboutHeadline ||
+              "Things I learn, build and document. This is a running record of experiments that worked, ideas that didn't, and the occasional project I'm proud enough to show."}
           </p>
         </Reveal>
         <Reveal delay={0.1} className="mt-8">
           <p className="max-w-xl text-[var(--ink-muted)]">
-            {aboutSetting?.value ||
+            {s.aboutText ||
               "I'm Arda — I write mostly about AI, robotics, programming and the small ideas in between. Everything here is written first for myself, and shared in case it's useful to anyone else digging through the same questions."}
           </p>
         </Reveal>
@@ -53,7 +62,7 @@ export default async function HomePage() {
         <section className="mx-auto max-w-6xl px-6 pb-24 md:px-10">
           <Reveal>
             <p className="mb-6 text-[11px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
-              Featured note
+              {s.featuredNoteLabel || "Featured note"}
             </p>
           </Reveal>
           <Reveal delay={0.05}>
@@ -65,9 +74,11 @@ export default async function HomePage() {
       {/* LATEST NOTES */}
       <section className="mx-auto max-w-6xl px-6 pb-24 md:px-10">
         <Reveal className="mb-10 flex items-end justify-between">
-          <h2 className="font-display text-3xl text-[var(--ink)] md:text-4xl">Latest notes</h2>
+          <h2 className="font-display text-3xl text-[var(--ink)] md:text-4xl">
+            {s.latestNotesTitle || "Latest notes"}
+          </h2>
           <Link href="/notes" className="ink-link hidden text-sm text-[var(--ink-muted)] md:block">
-            View all →
+            {s.latestNotesViewAll || "View all →"}
           </Link>
         </Reveal>
         <div className="grid grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
@@ -83,9 +94,11 @@ export default async function HomePage() {
       <section className="border-t border-[var(--border)] bg-[var(--surface)]">
         <div className="mx-auto max-w-6xl px-6 py-24 md:px-10">
           <Reveal className="mb-10">
-            <h2 className="font-display text-3xl text-[var(--ink)] md:text-4xl">Projects</h2>
+            <h2 className="font-display text-3xl text-[var(--ink)] md:text-4xl">
+              {s.projectsSectionTitle || "Projects"}
+            </h2>
             <p className="mt-3 max-w-lg text-[var(--ink-muted)]">
-              A handful of things I've built across AI, robotics, and the web.
+              {s.projectsSectionDesc || "A handful of things I've built across AI, robotics, and the web."}
             </p>
           </Reveal>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -122,7 +135,9 @@ export default async function HomePage() {
       {/* TIMELINE */}
       <section className="mx-auto max-w-6xl px-6 py-24 md:px-10">
         <Reveal className="mb-12">
-          <h2 className="font-display text-3xl text-[var(--ink)] md:text-4xl">Timeline</h2>
+          <h2 className="font-display text-3xl text-[var(--ink)] md:text-4xl">
+            {s.timelineTitle || "Timeline"}
+          </h2>
         </Reveal>
         <div className="border-l border-[var(--border-strong)] pl-8">
           {timeline.map((t, i) => (
@@ -140,14 +155,14 @@ export default async function HomePage() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(184,135,74,0.12),transparent_60%)]" />
         <Reveal className="relative mx-auto max-w-2xl px-6">
           <h2 className="font-display text-4xl text-[var(--ink)] md:text-5xl">
-            Explore the archive.
+            {s.ctaHeadline || "Explore the archive."}
           </h2>
           <Link
             href="/notes"
             data-cursor-hover
             className="mt-8 inline-flex items-center gap-2 text-lg text-accent"
           >
-            View All Notes
+            {s.ctaButtonText || "View All Notes"}
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
               <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
             </svg>

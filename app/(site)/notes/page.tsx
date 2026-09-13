@@ -1,4 +1,5 @@
 import { getPublishedPosts, getCategories, getTags } from "@/lib/data";
+import { prisma } from "@/lib/prisma";
 import NotesExplorer from "@/components/NotesExplorer";
 import Reveal from "@/components/Reveal";
 
@@ -6,11 +7,15 @@ export const metadata = { title: "Notes" };
 export const revalidate = 0;
 
 export default async function NotesPage() {
-  const [posts, categories, tags] = await Promise.all([
+  const [posts, categories, tags, allSettings] = await Promise.all([
     getPublishedPosts(),
     getCategories(),
     getTags(),
+    prisma.setting.findMany(),
   ]);
+
+  const s: Record<string, string> = {};
+  for (const item of allSettings as any[]) s[item.key] = item.value;
 
   const serializable = posts.map((p: any) => ({
     slug: p.slug,
@@ -26,11 +31,11 @@ export default async function NotesPage() {
   return (
     <div className="mx-auto max-w-6xl px-6 pb-28 pt-36 md:px-10 md:pt-44">
       <Reveal>
-        <p className="text-[11px] uppercase tracking-[0.14em] text-accent">Notes</p>
+        <p className="text-[11px] uppercase tracking-[0.14em] text-accent">
+          {s.notesPageLabel || "Notes"}
+        </p>
         <h1 className="mt-3 font-display text-5xl text-[var(--ink)] md:text-6xl">
-          Thoughts, ideas, experiments
-          <br />
-          and things worth remembering.
+          {s.notesPageHeadline || "Thoughts, ideas, experiments and things worth remembering."}
         </h1>
       </Reveal>
 

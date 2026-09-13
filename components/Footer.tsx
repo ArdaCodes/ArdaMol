@@ -1,6 +1,32 @@
 import Link from "next/link";
 
-export default function Footer() {
+interface FooterProps {
+  siteTitle?: string;
+  footerTagline?: string;
+  exploreLabel?: string;
+  navNotes?: string;
+  navProjects?: string;
+  navArchive?: string;
+  elsewhereLabel?: string;
+  socialGithub?: string;
+  socialTwitter?: string;
+  socialEmail?: string;
+  copyrightText?: string;
+}
+
+export default function Footer({
+  siteTitle = "Arda Mol",
+  footerTagline = "The Castle of Ideas — a personal record of things learned, built, and documented along the way.",
+  exploreLabel = "Explore",
+  navNotes = "Notes",
+  navProjects = "Projects",
+  navArchive = "Archive",
+  elsewhereLabel = "Elsewhere",
+  socialGithub = "https://github.com",
+  socialTwitter = "https://twitter.com",
+  socialEmail = "hello@ardamol.com",
+  copyrightText,
+}: FooterProps) {
   return (
     <footer className="relative overflow-hidden border-t border-[var(--border)] bg-[var(--bg)]">
       <svg
@@ -19,39 +45,38 @@ export default function Footer() {
       <div className="relative mx-auto max-w-6xl px-6 py-16 md:px-10">
         <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
           <div>
-            <p className="font-display text-2xl text-[var(--ink)]">Arda Mol</p>
+            <p className="font-display text-2xl text-[var(--ink)]">{siteTitle}</p>
             <p className="mt-2 max-w-xs text-sm text-[var(--ink-muted)]">
-              The Castle of Ideas — a personal record of things learned, built, and
-              documented along the way.
+              {footerTagline}
             </p>
           </div>
 
           <div className="flex gap-16">
             <div>
               <p className="mb-3 text-[11px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
-                Explore
+                {exploreLabel}
               </p>
               <ul className="space-y-2 text-sm text-[var(--ink-muted)]">
-                <li><Link href="/notes" className="ink-link">Notes</Link></li>
-                <li><Link href="/projects" className="ink-link">Projects</Link></li>
-                <li><Link href="/archive" className="ink-link">Archive</Link></li>
+                <li><Link href="/notes" className="ink-link">{navNotes}</Link></li>
+                <li><Link href="/projects" className="ink-link">{navProjects}</Link></li>
+                <li><Link href="/archive" className="ink-link">{navArchive}</Link></li>
               </ul>
             </div>
             <div>
               <p className="mb-3 text-[11px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
-                Elsewhere
+                {elsewhereLabel}
               </p>
               <ul className="space-y-2 text-sm text-[var(--ink-muted)]">
-                <li><a className="ink-link" href="https://github.com" target="_blank" rel="noreferrer">GitHub</a></li>
-                <li><a className="ink-link" href="https://twitter.com" target="_blank" rel="noreferrer">X / Twitter</a></li>
-                <li><a className="ink-link" href="mailto:hello@ardamol.com">Email</a></li>
+                <li><a className="ink-link" href={socialGithub} target="_blank" rel="noreferrer">GitHub</a></li>
+                <li><a className="ink-link" href={socialTwitter} target="_blank" rel="noreferrer">X / Twitter</a></li>
+                <li><a className="ink-link" href={`mailto:${socialEmail}`}>Email</a></li>
               </ul>
             </div>
           </div>
         </div>
 
         <div className="mt-14 flex flex-col-reverse items-start justify-between gap-4 border-t border-[var(--border)] pt-6 text-xs text-[var(--ink-dim)] md:flex-row md:items-center">
-          <p>© {new Date().getFullYear()} Arda Mol. All rights reserved.</p>
+          <p>{copyrightText || `© ${new Date().getFullYear()} ${siteTitle}. All rights reserved.`}</p>
           <Link href="/admin/login" className="text-[var(--ink-dim)] hover:text-[var(--ink-muted)] transition-colors">
             Admin
           </Link>

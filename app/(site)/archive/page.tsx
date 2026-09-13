@@ -1,12 +1,19 @@
 import Link from "next/link";
 import { getPublishedPosts } from "@/lib/data";
+import { prisma } from "@/lib/prisma";
 import Reveal from "@/components/Reveal";
 
 export const metadata = { title: "Archive" };
 export const revalidate = 0;
 
 export default async function ArchivePage() {
-  const posts = await getPublishedPosts();
+  const [posts, allSettings] = await Promise.all([
+    getPublishedPosts(),
+    prisma.setting.findMany(),
+  ]);
+
+  const s: Record<string, string> = {};
+  for (const item of allSettings as any[]) s[item.key] = item.value;
 
   const grouped: Record<string, Record<string, typeof posts>> = {};
   for (const post of posts) {
@@ -23,8 +30,12 @@ export default async function ArchivePage() {
   return (
     <div className="mx-auto max-w-4xl px-6 pb-28 pt-36 md:px-10 md:pt-44">
       <Reveal>
-        <p className="text-[11px] uppercase tracking-[0.14em] text-accent">Archive</p>
-        <h1 className="mt-3 font-display text-5xl text-[var(--ink)] md:text-6xl">Every note, by year.</h1>
+        <p className="text-[11px] uppercase tracking-[0.14em] text-accent">
+          {s.archivePageLabel || "Archive"}
+        </p>
+        <h1 className="mt-3 font-display text-5xl text-[var(--ink)] md:text-6xl">
+          {s.archivePageHeadline || "Every note, by year."}
+        </h1>
       </Reveal>
 
       <div className="mt-16 space-y-16">

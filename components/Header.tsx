@@ -6,19 +6,35 @@ import { usePathname } from "next/navigation";
 import ThemeSwitcher from "./ThemeSwitcher";
 import SearchOverlay from "./SearchOverlay";
 
-const NAV = [
-  { href: "/", label: "Home" },
-  { href: "/notes", label: "Notes" },
-  { href: "/projects", label: "Projects" },
-  { href: "/#about", label: "About" },
-  { href: "/archive", label: "Archive" },
-];
+interface HeaderProps {
+  siteTitle?: string;
+  navHome?: string;
+  navNotes?: string;
+  navProjects?: string;
+  navAbout?: string;
+  navArchive?: string;
+}
 
-export default function Header() {
+export default function Header({
+  siteTitle = "Arda Mol",
+  navHome = "Home",
+  navNotes = "Notes",
+  navProjects = "Projects",
+  navAbout = "About",
+  navArchive = "Archive",
+}: HeaderProps) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const pathname = usePathname();
+
+  const NAV = [
+    { href: "/", label: navHome },
+    { href: "/notes", label: navNotes },
+    { href: "/projects", label: navProjects },
+    { href: "/#about", label: navAbout },
+    { href: "/archive", label: navArchive },
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -38,7 +54,7 @@ export default function Header() {
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4 md:px-10">
           <Link href="/" className="font-display text-lg tracking-tight text-[var(--ink)]" data-cursor-hover>
-            Arda Mol
+            {siteTitle}
           </Link>
 
           <nav className="hidden items-center gap-8 md:flex">
