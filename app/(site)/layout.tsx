@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
+import PageTransition from "@/components/PageTransition";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { prisma } from "@/lib/prisma";
 
@@ -20,7 +21,9 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         navAbout={s.navAbout || "About"}
         navArchive={s.navArchive || "Archive"}
       />
-      <main>{children}</main>
+      <main>
+        <PageTransition>{children}</PageTransition>
+      </main>
       <Footer
         siteTitle={s.siteTitle || "Arda Mol"}
         footerTagline={s.footerTagline}

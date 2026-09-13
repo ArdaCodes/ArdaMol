@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
 import Link from "next/link";
 
 interface ParallaxHeroProps {
@@ -27,23 +27,43 @@ export default function ParallaxHero({
   const { scrollYProgress } = useScroll({ target: wrapRef, offset: ["start start", "end end"] });
 
   const starsOpacity = useTransform(scrollYProgress, [0, 1], [0, 0.9]);
-  const mtnFarY = useTransform(scrollYProgress, [0, 1], [0, -60]);
-  const mtnMidY = useTransform(scrollYProgress, [0, 1], [0, -140]);
-  const fogY = useTransform(scrollYProgress, [0, 1], [0, -180]);
-  const fogOpacity = useTransform(scrollYProgress, [0, 1], [0.05, 0.12]);
-  const mtnNearY = useTransform(scrollYProgress, [0, 1], [0, -230]);
-  const castleY = useTransform(scrollYProgress, [0, 1], [0, -300]);
-  const castleScale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
-  const groundY = useTransform(scrollYProgress, [0, 1], [0, -340]);
+  const mtnFarY = useTransform(scrollYProgress, [0, 1], [0, -90]);
+  const mtnMidY = useTransform(scrollYProgress, [0, 1], [0, -190]);
+  const fogY = useTransform(scrollYProgress, [0, 1], [0, -230]);
+  const fogOpacity = useTransform(scrollYProgress, [0, 1], [0.05, 0.16]);
+  const mtnNearY = useTransform(scrollYProgress, [0, 1], [0, -300]);
+  const castleY = useTransform(scrollYProgress, [0, 1], [0, -380]);
+  const castleScale = useTransform(scrollYProgress, [0, 1], [1, 1.14]);
+  const groundY = useTransform(scrollYProgress, [0, 1], [0, -420]);
   const torchL = useTransform(scrollYProgress, [0.4, 1], [0, 0.9]);
   const torchR = useTransform(scrollYProgress, [0.4, 1], [0, 0.9]);
 
   const heroOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
   const heroY = useTransform(scrollYProgress, [0, 0.3], [0, -40]);
 
+  // Mouse-based parallax for the castle layer
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const springX = useSpring(mouseX, { stiffness: 40, damping: 20 });
+  const springY = useSpring(mouseY, { stiffness: 40, damping: 20 });
+  const castleMouseX = useTransform(springX, [-1, 1], [-14, 14]);
+  const castleMouseY = useTransform(springY, [-1, 1], [-8, 8]);
+  const mtnMouseX = useTransform(springX, [-1, 1], [-6, 6]);
+
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    mouseX.set(x * 2);
+    mouseY.set(y * 2);
+  }
+
   return (
     <div ref={wrapRef} className="relative h-[180vh]">
-      <div className="sticky top-0 h-[100svh] w-full overflow-hidden bg-[#0b0b0d]">
+      <div
+        onMouseMove={handleMouseMove}
+        className="sticky top-0 h-[100svh] w-full overflow-hidden bg-[#0b0b0d]"
+      >
         <svg
           viewBox="0 0 1600 900"
           preserveAspectRatio="xMidYMax slice"
@@ -69,13 +89,13 @@ export default function ParallaxHero({
           </motion.g>
 
           <motion.polygon
-            style={{ y: mtnFarY }}
+            style={{ y: mtnFarY, x: mtnMouseX }}
             points="0,900 0,560 150,440 340,540 560,380 820,520 1060,400 1320,540 1600,430 1600,900"
             fill="#241d2c"
           />
 
           <motion.polygon
-            style={{ y: mtnMidY }}
+            style={{ y: mtnMidY, x: mtnMouseX }}
             points="0,900 0,640 220,520 460,620 720,460 980,610 1240,480 1600,600 1600,900"
             fill="#181420"
           />
@@ -88,7 +108,10 @@ export default function ParallaxHero({
             fill="#100d16"
           />
 
-          <motion.g fill="#0a080b" style={{ y: castleY, scale: castleScale, transformOrigin: "50% 100%" }}>
+          <motion.g
+            fill="#0a080b"
+            style={{ y: castleY, scale: castleScale, x: castleMouseX, transformOrigin: "50% 100%" }}
+          >
             <rect x="700" y="500" width="200" height="220" />
             <rect x="660" y="460" width="40" height="260" />
             <rect x="900" y="460" width="40" height="260" />
@@ -104,8 +127,8 @@ export default function ParallaxHero({
             <path d="M 780 720 L 780 630 A 20 20 0 0 1 820 630 L 820 720 Z" fill="#050405" />
           </motion.g>
 
-          <motion.circle cx="740" cy="670" r="10" fill="#e8a94b" style={{ opacity: torchL }} />
-          <motion.circle cx="860" cy="670" r="10" fill="#e8a94b" style={{ opacity: torchR }} />
+          <motion.circle cx="740" cy="670" r="10" fill="#e8a94b" style={{ opacity: torchL, y: castleMouseY }} />
+          <motion.circle cx="860" cy="670" r="10" fill="#e8a94b" style={{ opacity: torchR, y: castleMouseY }} />
 
           <motion.rect x="0" y="820" width="1600" height="200" fill="#050405" style={{ y: groundY }} />
         </svg>

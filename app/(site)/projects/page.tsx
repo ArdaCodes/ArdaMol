@@ -30,6 +30,15 @@ export default async function ProjectsPage() {
         </p>
       </Reveal>
 
+      {projects.length === 0 && (
+        <div className="mt-24 flex flex-col items-center text-center">
+          <p className="font-display text-3xl text-[var(--ink)]">No projects on display yet.</p>
+          <p className="mt-3 max-w-sm text-[var(--ink-muted)]">
+            The workshop is quiet for now — new work will appear here soon.
+          </p>
+        </div>
+      )}
+
       <div className="mt-16 grid grid-cols-1 gap-10 md:grid-cols-2">
         {projects.map((p: any, i: number) => (
           <Reveal key={p.slug} delay={i * 0.05}>
@@ -57,7 +66,7 @@ export default async function ProjectsPage() {
                   ))}
                 </div>
                 {p.externalUrl && (
-				<a
+                  
                     href={p.externalUrl}
                     target="_blank"
                     rel="noreferrer"

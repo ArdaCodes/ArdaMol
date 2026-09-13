@@ -39,6 +39,15 @@ export default async function NotesPage() {
         </h1>
       </Reveal>
 
+      {serializable.length === 0 && (
+        <div className="mt-24 flex flex-col items-center text-center">
+          <p className="font-display text-3xl text-[var(--ink)]">This corridor is still empty.</p>
+          <p className="mt-3 max-w-sm text-[var(--ink-muted)]">
+            No notes have been published yet. Check back soon — the torches are still being lit.
+          </p>
+        </div>
+      )}
+
       <NotesExplorer
         posts={serializable}
         categories={categories.map((c: any) => ({ name: c.name, slug: c.slug }))}
