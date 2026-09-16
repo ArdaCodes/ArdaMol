@@ -82,4 +82,14 @@ model Media {
 model Setting {
   key   String @id
   value String
+  model VisitedPlace {
+  id        String   @id @default(cuid())
+  type      String
+  code      String
+  name      String
+  note      String?
+  createdAt DateTime @default(now())
+
+  @@unique([type, code])
+}
 }

@@ -15,6 +15,7 @@
     "@libsql/client": "^0.8.1",
     "@prisma/adapter-libsql": "^5.22.0",
     "@prisma/client": "^5.22.0",
+    "@yanikemmenegger/react-world-map": "^1.3.5",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^2.11.0",
     "framer-motion": "^11.3.24",
@@ -23,6 +24,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-markdown": "^9.0.1",
+    "react-turkey-map": "^2.0.3",
     "remark-gfm": "^4.0.0",
     "slugify": "^1.6.6"
   },
