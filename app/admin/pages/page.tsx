@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 
@@ -52,7 +52,8 @@ const FIELDS: { key: string; label: string; group: string; type?: "input" | "tex
   { key: "socialEmail", label: "Contact email", group: "Footer" },
   { key: "copyrightText", label: "Copyright line (leave blank for default)", group: "Footer" },
 
-  { key: "secretPageContent", label: "Private notes (only visible to you, at /23-11)", group: "Private", type: "textarea", rows: 14 },
+  { key: "secretPagePin", label: "4-digit PIN for /23-11", group: "Private" },
+  { key: "secretPageContent", label: "Private notes (only visible after PIN)", group: "Private", type: "textarea", rows: 14 },
 ];
 
 const GROUPS = Array.from(new Set(FIELDS.map((f) => f.group)));
