@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -11,6 +11,7 @@ const NAV = [
   { href: "/admin/tags", label: "Tags" },
   { href: "/admin/media", label: "Media" },
   { href: "/admin/projects", label: "Projects" },
+  { href: "/admin/map", label: "Map" },
   { href: "/admin/pages", label: "Pages" },
   { href: "/admin/appearance", label: "Appearance" },
   { href: "/admin/settings", label: "Settings" },
