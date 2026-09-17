@@ -1,5 +1,4 @@
-﻿@'
-// @ts-nocheck
+﻿// @ts-nocheck
 "use client";
 
 import { useEffect, useState } from "react";
@@ -144,4 +143,3 @@ export default function AdminMapPage() {
     </div>
   );
 }
-'@ | Out-File -FilePath "app\admin\map\page.tsx" -Encoding utf8
