@@ -15,5 +15,18 @@ export async function POST(req: NextRequest) {
   }
 
   const contentSetting = await prisma.setting.findUnique({ where: { key: "secretPageContent" } });
-  return NextResponse.json({ ok: true, content: contentSetting?.value || "" });
+  const goalsSetting = await prisma.setting.findUnique({ where: { key: "secretGoals" } });
+  const grudgesSetting = await prisma.setting.findUnique({ where: { key: "secretGrudges" } });
+
+  let goals = [];
+  let grudges = [];
+  try { goals = JSON.parse(goalsSetting?.value || "[]"); } catch {}
+  try { grudges = JSON.parse(grudgesSetting?.value || "[]"); } catch {}
+
+  return NextResponse.json({
+    ok: true,
+    content: contentSetting?.value || "",
+    goals,
+    grudges,
+  });
 }
