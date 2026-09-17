@@ -1,12 +1,13 @@
-﻿// @ts-nocheck
+﻿@'
+// @ts-nocheck
 "use client";
 
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 
 const TurkeyMap = dynamic(() => import("react-turkey-map"), { ssr: false });
-const World = dynamic(() => import("@yanikemmenegger/react-world-map").then((m) => ({ default: m.default })), { ssr: false });
-const MapProvider = dynamic(() => import("@yanikemmenegger/react-world-map").then((m) => ({ default: m.MapProvider })), { ssr: false });
+const WorldMapClient = dynamic(() => import("@/components/WorldMapClient"), { ssr: false });
+
 interface Place {
   id: string;
   type: string;
@@ -90,12 +91,7 @@ export default function AdminMapPage() {
             onCityClick={({ plate, city }: any) => openForm(plate, city)}
           />
         ) : (
-          <MapProvider
-            initialFillColors={initialFillColors}
-            defaultOnClickHandler={(country: any) => openForm(country.alpha2Code || country.code, country.commonName || country.name)}
-          >
-            <World />
-          </MapProvider>
+          <WorldMapClient initialFillColors={initialFillColors} onClickPlace={openForm} />
         )}
       </div>
 
@@ -148,3 +144,4 @@ export default function AdminMapPage() {
     </div>
   );
 }
+'@ | Out-File -FilePath "app\admin\map\page.tsx" -Encoding utf8
