@@ -1,3 +1,4 @@
+import IntroGate from "@/components/IntroGate";
 import type { Metadata } from "next";
 import { Fraunces, Manrope, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body
         className={`${display.variable} ${body.variable} ${mono.variable} font-body antialiased`}
       >
+        <IntroGate />	  
         {children}
       </body>
     </html>
