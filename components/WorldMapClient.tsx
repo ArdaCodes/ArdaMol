@@ -1,7 +1,8 @@
 ﻿// @ts-nocheck
 "use client";
 
-import World, { MapProvider } from "@yanikemmenegger/react-world-map";
+import { MapProvider } from "@yanikemmenegger/react-world-map";
+import World from "@yanikemmenegger/react-world-map";
 
 export default function WorldMapClient({
   initialFillColors,
