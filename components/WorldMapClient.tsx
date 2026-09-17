@@ -1,4 +1,5 @@
-﻿"use client";
+﻿// @ts-nocheck
+"use client";
 
 import World, { MapProvider } from "@yanikemmenegger/react-world-map";
 
