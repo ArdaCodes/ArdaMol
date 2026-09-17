@@ -24,6 +24,7 @@ export default function SecretGate() {
   const [loading, setLoading] = useState(false);
 
   const [tab, setTab] = useState<"notes" | "goals" | "grudges" | "map">("notes");
+  const [mapSubTab, setMapSubTab] = useState<"tr" | "world">("tr");
   const [content, setContent] = useState("");
   const [goals, setGoals] = useState<Goal[]>([]);
   const [grudges, setGrudges] = useState<Grudge[]>([]);
@@ -234,15 +235,30 @@ export default function SecretGate() {
         </div>
       )}
 
-      {tab === "map" && (
+            {tab === "map" && (
         <div className="mt-6">
           <div className="flex gap-2 text-xs mb-4 text-[var(--ink-dim)]">
             To add or edit place notes, use Admin - Map.
           </div>
-          <TurkeyMap colorData={trColorMap} onCityClick={({ plate, city }: any) => handleMapClick(plate, city)} />
-          <div className="mt-6">
-            <WorldMapClient initialFillColors={worldColorMap} onClickPlace={handleMapClick} />
+          <div className="flex gap-2 mb-4">
+            <button
+              onClick={() => setMapSubTab("tr")}
+              className={`rounded-full px-3 py-1 text-xs ${mapSubTab === "tr" ? "bg-accent text-stone-950" : "border border-[var(--border-strong)] text-[var(--ink-muted)]"}`}
+            >
+              Turkey
+            </button>
+            <button
+              onClick={() => setMapSubTab("world")}
+              className={`rounded-full px-3 py-1 text-xs ${mapSubTab === "world" ? "bg-accent text-stone-950" : "border border-[var(--border-strong)] text-[var(--ink-muted)]"}`}
+            >
+              World
+            </button>
           </div>
+          {mapSubTab === "tr" ? (
+            <TurkeyMap colorData={trColorMap} onCityClick={({ plate, city }: any) => handleMapClick(plate, city)} />
+          ) : (
+            <WorldMapClient initialFillColors={worldColorMap} onClickPlace={handleMapClick} />
+          )}
         </div>
       )}
 
