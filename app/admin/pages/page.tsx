@@ -52,7 +52,7 @@ const FIELDS: { key: string; label: string; group: string; type?: "input" | "tex
   { key: "socialEmail", label: "Contact email", group: "Footer" },
   { key: "copyrightText", label: "Copyright line (leave blank for default)", group: "Footer" },
 
-  { key: "secretPagePin", label: "3712", group: "Private" },
+  { key: "secretPagePin", label: "4-digit PIN for /23-11", group: "Private" },
   { key: "secretPageContent", label: "Private notes (only visible after PIN)", group: "Private", type: "textarea", rows: 14 },
 ];
 
