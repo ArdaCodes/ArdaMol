@@ -4,9 +4,8 @@ import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 
 const TurkeyMap = dynamic(() => import("react-turkey-map"), { ssr: false });
-const World = dynamic(() => import("@yanikemmenegger/react-world-map").then((m) => m.default), { ssr: false });
-const MapProvider = dynamic(() => import("@yanikemmenegger/react-world-map").then((m) => m.MapProvider), { ssr: false });
-
+const World = dynamic(() => import("@yanikemmenegger/react-world-map").then((m) => ({ default: m.default })), { ssr: false });
+const MapProvider = dynamic(() => import("@yanikemmenegger/react-world-map").then((m) => ({ default: m.MapProvider })), { ssr: false });
 interface Place {
   id: string;
   type: string;
